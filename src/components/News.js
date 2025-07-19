@@ -92,9 +92,10 @@ export default class News extends Component {
 
     const nextPage = page + 1;
     const { country, category } = this.props;
+    const apiKey = process.env.REACT_APP_NEWS_API_KEY;
 
     try {
-      let url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=16f6c3a11423473aa1e4186778fd3d6c&page=${nextPage}&pageSize=${pageSize}`;
+      let url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${apiKey}&page=${nextPage}&pageSize=${pageSize}`;
       let data = await fetch(url);
       let parsedData = await data.json();
 
@@ -122,7 +123,7 @@ export default class News extends Component {
     const hasMore = articles.length < maxArticles;
 
     return (
-      <>
+      <div className="container my-3">
         <h3>
           <b>NewsSpidey - QUICK NEWS BYTES</b>
         </h3>
@@ -159,7 +160,7 @@ export default class News extends Component {
             </div>
           </div>
         </InfiniteScroll>
-      </>
+      </div>
     );
   }
 }
