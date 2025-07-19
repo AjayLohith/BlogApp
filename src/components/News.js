@@ -117,6 +117,27 @@ export default class News extends Component {
     }
   };
 
+  getHeading = () => {
+    const { category } = this.props;
+    switch (category) {
+      case "health":
+        return "Health BYTES";
+      case "sports":
+        return "Sports BYTES";
+      case "entertainment":
+        return "Entertainment BYTES";
+      case "technology":
+        return "Technology BYTES";
+      case "business":
+        return "Business BYTES";
+      case "science":
+        return "Science BYTES";
+      case "general":
+      default:
+        return "QUICK NEWS BYTES";
+    }
+  };
+
   render() {
     const { articles, totalResults, pageSize, maxPages } = this.state;
     const maxArticles = Math.min(totalResults, pageSize * maxPages);
@@ -125,14 +146,13 @@ export default class News extends Component {
     return (
       <div className="container my-3">
         <h3>
-          <b>NewsSpidey - QUICK NEWS BYTES</b>
+          <b>NewsSpidey - {this.getHeading()}</b>
         </h3>
-
         <InfiniteScroll
           dataLength={articles.length}
           next={this.fetchMoreData}
           hasMore={hasMore}
-          loader={null} // ✅ Prevent spinner flicker
+          loader={null}
           endMessage={
             <p style={{ textAlign: "center" }}>
               <b>Yay! You have seen it all 🎉</b>

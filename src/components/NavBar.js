@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import '../styles/DarkMode.css';
 
 export default function NavBar() {
   const [darkMode, setDarkMode] = useState(false);
+  const location = useLocation();
+
   const toggleDarkMode = () => {
     setDarkMode((prevMode) => {
       const newMode = !prevMode;
@@ -28,7 +30,10 @@ export default function NavBar() {
   }, []);
 
   return (
-    <nav className={`navbar navbar-expand-lg navbar-${darkMode ? 'dark' : 'light'} ${darkMode ? 'bg-dark' : 'bg-light'}`}>
+    <nav
+      className={`navbar navbar-expand-lg navbar-${darkMode ? 'dark' : 'light'} ${darkMode ? 'bg-dark' : 'bg-light'} sticky-top`}
+      style={{ zIndex: 1020 }}
+    >
       <Link className="navbar-brand" to="/"> <b>NewsSpidey</b> </Link>
       <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
         <span className="navbar-toggler-icon"></span>
@@ -36,25 +41,27 @@ export default function NavBar() {
 
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
-          <li className="nav-item"><Link className="nav-link" to="/">Home</Link></li>
-          <li className="nav-item"><Link className="nav-link" to="/sports">Sports</Link></li>
-          <li className="nav-item"><Link className="nav-link" to="/entertainment">Entertainment</Link></li>
-          <li className="nav-item"><Link className="nav-link" to="/health">Health</Link></li>
-          <li className="nav-item"><Link className="nav-link" to="/technology">Technology</Link></li>
-          <li className="nav-item"><Link className="nav-link" to="/business">Business</Link></li>
-          {/* <li className="nav-item"><Link className="nav-link" to="/general">General</Link></li> */}
-          <li className="nav-item"><Link className="nav-link" to="/science">Science</Link></li>
-
-          {/* <li className="nav-item dropdown">
-            <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
-              Genre
-            </a>
-            <div className="dropdown-menu">
-              <a className="dropdown-item" href="#">Action</a>
-              <div className="dropdown-divider"></div>
-              <a className="dropdown-item" href="#">Something else here</a>
-            </div>
-          </li> */}
+          <li className="nav-item">
+            <Link className={`nav-link${location.pathname === '/' ? ' active-nav' : ''}`} to="/">Home</Link>
+          </li>
+          <li className="nav-item">
+            <Link className={`nav-link${location.pathname === '/sports' ? ' active-nav' : ''}`} to="/sports">Sports</Link>
+          </li>
+          <li className="nav-item">
+            <Link className={`nav-link${location.pathname === '/entertainment' ? ' active-nav' : ''}`} to="/entertainment">Entertainment</Link>
+          </li>
+          <li className="nav-item">
+            <Link className={`nav-link${location.pathname === '/health' ? ' active-nav' : ''}`} to="/health">Health</Link>
+          </li>
+          <li className="nav-item">
+            <Link className={`nav-link${location.pathname === '/technology' ? ' active-nav' : ''}`} to="/technology">Technology</Link>
+          </li>
+          <li className="nav-item">
+            <Link className={`nav-link${location.pathname === '/business' ? ' active-nav' : ''}`} to="/business">Business</Link>
+          </li>
+          <li className="nav-item">
+            <Link className={`nav-link${location.pathname === '/science' ? ' active-nav' : ''}`} to="/science">Science</Link>
+          </li>
         </ul>
         <button className={`btn ${darkMode ? 'btn-outline-light' : 'btn-outline-dark'}`} onClick={toggleDarkMode}>
           {darkMode ? <span>☀️ Light</span> : <span>🌙 Dark</span>}

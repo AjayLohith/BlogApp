@@ -10,6 +10,14 @@
 .navbar-nav .nav-link:hover {
   opacity: 1; /* Brighten when hovered, clicked, or active */
 }
+
+.active-nav {
+  font-weight: bold;
+  border-bottom: 2px solid #007bff;
+  opacity: 1 !important;
+  color: #007bff !important; /* Make active section text blue and bold */
+}
+
 .dark-mode {
   background-color: #212529 !important;
   color: #fff !important;
@@ -35,4 +43,11 @@
 .light-mode .card-title,
 .light-mode .card-text {
   color: #212529 !important;
+}
+
+.dark-mode .active-nav {
+  font-weight: bold;
+  border-bottom: 2px solid #007bff;
+  opacity: 1 !important;
+  color: #66b2ff !important; /* Brighter blue for dark mode */
 }
