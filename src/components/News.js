@@ -36,8 +36,9 @@ export default class News extends Component {
       const { country, category } = this.props;
       const { page, pageSize, maxPages } = this.state;
       const maxArticles = pageSize * maxPages;
+      const apiKey = process.env.REACT_APP_NEWS_API_KEY;
 
-      let url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=16f6c3a11423473aa1e4186778fd3d6c&page=${page}&pageSize=${pageSize}`;
+      let url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`;
       let data = await fetch(url);
       let parsedData = await data.json();
 
