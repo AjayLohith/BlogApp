@@ -36,14 +36,14 @@ export default class News extends Component {
       const { country, category } = this.props;
       const { page, pageSize, maxPages } = this.state;
       const maxArticles = pageSize * maxPages;
-      const apiKey = process.env.REACT_APP_NEWS_API_KEY;
 
-      let url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`;
+      // ✅ Call your backend proxy instead of NewsAPI directly
+      let url = `/api/news?country=${country}&category=${category}&page=${page}&pageSize=${pageSize}`;
       let data = await fetch(url);
       let parsedData = await data.json();
 
-      if (parsedData.status === "error") {
-        throw new Error(parsedData.message);
+      if (parsedData.error) {
+        throw new Error(parsedData.error);
       }
 
       const limitedTotal = Math.min(parsedData.totalResults, maxArticles);
@@ -93,15 +93,15 @@ export default class News extends Component {
 
     const nextPage = page + 1;
     const { country, category } = this.props;
-    const apiKey = process.env.REACT_APP_NEWS_API_KEY;
 
     try {
-      let url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${apiKey}&page=${nextPage}&pageSize=${pageSize}`;
+      // ✅ Call your backend proxy
+      let url = `/api/news?country=${country}&category=${category}&page=${nextPage}&pageSize=${pageSize}`;
       let data = await fetch(url);
       let parsedData = await data.json();
 
-      if (parsedData.status === "error") {
-        throw new Error(parsedData.message);
+      if (parsedData.error) {
+        throw new Error(parsedData.error);
       }
 
       const newTotal = Math.min(parsedData.totalResults, pageSize * maxPages);
@@ -153,7 +153,7 @@ export default class News extends Component {
           dataLength={articles.length}
           next={this.fetchMoreData}
           hasMore={hasMore}
-          loader={null}
+          loader={<Spinner />}
           endMessage={
             <p style={{ textAlign: "center" }}>
               <b>Yay! You have seen it all 🎉</b>
