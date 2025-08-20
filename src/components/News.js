@@ -6,7 +6,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 export default class News extends Component {
   static defaultProps = {
-    country: "us",
+    country: "in",
     pageSize: 20,
     category: "general",
   };
@@ -29,28 +29,27 @@ export default class News extends Component {
     };
   }
 
+  // 🔥 Core function to fetch news
   async updateNews() {
     try {
       this.setState({ loading: true });
 
       const { country, category } = this.props;
-      const { page, pageSize, maxPages } = this.state;
-      const maxArticles = pageSize * maxPages;
+      const { page, pageSize } = this.state;
 
-      // ✅ Call your backend proxy instead of NewsAPI directly
+      // Call your own API route
       let url = `/api/news?country=${country}&category=${category}&page=${page}&pageSize=${pageSize}`;
+
       let data = await fetch(url);
       let parsedData = await data.json();
 
-      if (parsedData.error) {
-        throw new Error(parsedData.error);
+      if (parsedData.status !== "ok") {
+        throw new Error(parsedData.message || "No news found from API");
       }
-
-      const limitedTotal = Math.min(parsedData.totalResults, maxArticles);
 
       this.setState({
         articles: parsedData.articles || [],
-        totalResults: limitedTotal,
+        totalResults: parsedData.totalResults || 0,
         loading: false,
       });
     } catch (error) {
@@ -63,53 +62,26 @@ export default class News extends Component {
     await this.updateNews();
   }
 
-  handleNxtClick = async () => {
-    if (this.state.page < this.state.maxPages) {
-      this.setState(
-        (prevState) => ({ page: prevState.page + 1, loading: true }),
-        async () => {
-          await this.updateNews();
-        }
-      );
-    }
-  };
-
-  handlePrevClick = async () => {
-    if (this.state.page > 1) {
-      this.setState(
-        (prevState) => ({ page: prevState.page - 1, loading: true }),
-        async () => {
-          await this.updateNews();
-        }
-      );
-    }
-  };
-
   fetchMoreData = async () => {
-    const { articles, totalResults, page, pageSize, maxPages } = this.state;
-    const maxArticles = Math.min(totalResults, pageSize * maxPages);
-
-    if (articles.length >= maxArticles) return;
+    const { articles, totalResults, page, pageSize } = this.state;
+    if (articles.length >= totalResults) return;
 
     const nextPage = page + 1;
     const { country, category } = this.props;
 
     try {
-      // ✅ Call your backend proxy
       let url = `/api/news?country=${country}&category=${category}&page=${nextPage}&pageSize=${pageSize}`;
       let data = await fetch(url);
       let parsedData = await data.json();
 
-      if (parsedData.error) {
-        throw new Error(parsedData.error);
+      if (parsedData.status !== "ok") {
+        throw new Error(parsedData.message || "No news found from API");
       }
-
-      const newTotal = Math.min(parsedData.totalResults, pageSize * maxPages);
 
       this.setState({
         articles: articles.concat(parsedData.articles || []),
         page: nextPage,
-        totalResults: newTotal,
+        totalResults: parsedData.totalResults || 0,
         loading: false,
       });
     } catch (error) {
@@ -163,10 +135,7 @@ export default class News extends Component {
           <div className="container">
             <div className="row">
               {articles.map((element) => (
-                <div
-                  className="col-lg-3 col-md-4 col-sm-6 col-12 my-3"
-                  key={element.url}
-                >
+                <div className="col-lg-3 col-md-4 col-sm-6 col-12 my-3" key={element.url}>
                   <NewsItem
                     title={element.title || ""}
                     description={element.description || ""}

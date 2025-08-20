@@ -2,13 +2,9 @@
 
 export default async function handler(req, res) {
   const { country = "in", category = "general", page = 1, pageSize = 10 } = req.query;
-
-  // use NEWS_API_KEY from your .env
   const apiKey = process.env.NEWS_API_KEY;
 
-  // Build World News API URL
   let url = `https://api.worldnewsapi.com/top-news?source-country=${country}&language=en&page=${page}&number=${pageSize}`;
-
   if (category && category !== "general") {
     url += `&topic=${category}`;
   }
@@ -24,7 +20,6 @@ export default async function handler(req, res) {
       throw new Error(data.message || "Failed to fetch news");
     }
 
-    // normalize WorldNewsAPI response to match NewsAPI style
     const articles = (data.news || []).map((item) => ({
       title: item.title,
       description: item.text,
